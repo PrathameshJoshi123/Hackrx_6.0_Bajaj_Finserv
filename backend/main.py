@@ -55,3 +55,8 @@ async def run_query(
     except Exception as e:
         # Catch any exception, return HTTP 500 with error message
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/")
+def tp():
+    return {"msg": "Hello"}
