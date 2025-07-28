@@ -92,13 +92,13 @@ def add_to_index(doc: Dict, doc_type: str, extra_metadata: Optional[Dict] = None
         vectorstore.add_texts(texts, metadatas=[doc.metadata for doc in documents])
 
 # --- Load a saved FAISS index from disk ---
-def load_index(path="faiss_index"):
+def load_index(path="/tmp/faiss_index"):
     global vectorstore
     logging.info(f"Loading FAISS index from {path}")
     vectorstore = FAISS.load_local(path, embedding_model)
 
 # --- Save current FAISS index to disk ---
-def save_index(path="faiss_index"):
+def save_index(path="/tmp/faiss_index"):
     logging.info(f"Saving FAISS index to {path}")
     os.makedirs(path, exist_ok=True)
     vectorstore.save_local(path)

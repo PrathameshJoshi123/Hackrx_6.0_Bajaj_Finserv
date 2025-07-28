@@ -10,7 +10,7 @@ from services.docx_parser import parse_docx
 from services.email_parser import parse_email
 
 # Downloads a file from the provided URL and saves it to a temporary directory
-def download_file(url, save_dir="temp_downloads"):
+def download_file(url, save_dir="/tmp/temp_downloads"):
     # Create the directory if it doesn't exist
     os.makedirs(save_dir, exist_ok=True)
 
