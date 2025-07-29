@@ -3,7 +3,6 @@ import logging
 from langchain.chains.retrieval import create_retrieval_chain
 from langchain.chains.combine_documents.stuff import create_stuff_documents_chain
 from langchain.prompts import PromptTemplate
-from langchain_groq.chat_models import ChatGroq
 from vector_store import get_retriever  # Adjust import path if needed
 from langchain_mistralai.chat_models import ChatMistralAI
 
