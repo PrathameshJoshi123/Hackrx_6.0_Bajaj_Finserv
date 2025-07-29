@@ -5,6 +5,7 @@ from langchain.chains.combine_documents.stuff import create_stuff_documents_chai
 from langchain.prompts import PromptTemplate
 from langchain_groq.chat_models import ChatGroq
 from vector_store import get_retriever  # Adjust import path if needed
+from langchain_mistralai.chat_models import ChatMistralAI
 
 # --- Configure logging ---
 logging.basicConfig(
@@ -16,9 +17,9 @@ logger = logging.getLogger(__name__)
 # --- Initialize the Groq LLM model ---
 try:
     logger.info("Initializing Groq LLM with model: llama3-8b-8192")
-    llm = ChatGroq(
-        model="llama3-8b-8192",             # Language model used for QA
-        api_key=os.getenv("GROQ_API_KEY"),  # API key pulled from environment variable
+    llm = ChatMistralAI(
+        model="mistral-small",             # Language model used for QA
+        api_key=os.getenv("MISTRAL_API_KEY"),  # API key pulled from environment variable
         temperature=0.2                     # Controls creativity vs. factual response
     )
 except Exception as e:
@@ -27,17 +28,18 @@ except Exception as e:
 
 # --- Define the custom prompt template ---
 CUSTOM_PROMPT_TEMPLATE = """
-You are a helpful assistant trained to answer customer questions based strictly on the policy context provided below. 
+You are a highly accurate assistant designed to answer customer questions based **only** on the provided policy context.
 
-INSTRUCTIONS:
-- Search exhaustivly in the given context for the question.
-- Use simple, user-friendly language
-- Strictly Answer in 1-3 sentences maximum
-- Do not guess or add information not in the context
-- Strictly search in the context many times.
-- And Specify each detail about that question in answer
-- Strictly not use new line characters or formatting symbols in answers
-- Provide direct, helpful answers based solely on the provided context
+YOUR TASK:
+- Search the entire context carefully and repeatedly to find the exact, complete answer.
+- Only return facts found **explicitly** in the context; do not guess, assume, or infer.
+- Use clear, friendly, and simple language.
+- Answer in **1 to 3 sentences maximum**.
+- **Do not** include line breaks, bullet points, formatting symbols, or additional commentary.
+- Include specific conditions or sections in the policy in detail for the answer.
+- If the answer is not found in the context, say: "This information is not available in the provided policy context."
+- Your goal is to extract accurate, complete answers in natural, helpful language.
+- Support your ans with the facts and evidence mention it in ans
 
 Context:
 ---------
@@ -46,6 +48,7 @@ Context:
 Q: {input}
 A:
 """
+
 
 # --- Create the prompt template object ---
 try:
@@ -76,6 +79,7 @@ def get_qa_chain():
             prompt=prompt  # Custom prompt with QA instructions
         )
 
+        
         logger.info("Creating retrieval QA chain")
         return create_retrieval_chain(
             retriever=retriever,

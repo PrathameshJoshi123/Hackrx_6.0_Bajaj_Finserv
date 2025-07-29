@@ -43,6 +43,7 @@ async def run_query(
         questions_input = [{"input": q} for q in request.questions]
         results = qa_chain.batch(questions_input)
 
+        print(results)
         # Extract and clean up answers from the QA chain's results
         answers = [res["answer"].strip() for res in results]
 

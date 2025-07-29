@@ -92,3 +92,8 @@ def flatten_table(table, section_title=None):
             continue
 
     return "\n".join(lines)
+
+
+if __name__ == "__main__":
+    text = parse_pdf("./backend/temp_downloads/policy.pdf")
+    print(text)
